@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="slider mt-4">
+	<div class="container-fluid">
+		<div class="row no-gutters">
+			<div class="col-lg-12 col-sm-12 col-md-12 slider-wrap">
+				{% for slider in slider_posts %}
+	            <div class="slider-item">
+	               <div class="slider-item-content">
+						<div class="post-thumb mb-4">
+							<a href="{% url 'single_post' slider.slug %}">
+								<img src="{{ slider.feature_img.url }}" alt="" class="img-fluid">
+							</a>
+						</div>
+
+						<div class="slider-post-content">
+							<span><a class="cat-name text-color font-sm font-extra text-uppercase letter-spacing" href="{% url 'category_url' slider.category.slug %}">{{ slider.category }}</a></span>
+							<h3 class="post-title mt-1"><a href="{% url 'single_post' slider.slug %}">{{ slider.title }}</a></h3>
+							<span class=" text-muted  text-capitalize">{{ slider.created }}</span>
+						</div>
+	               </div>
+	            </div>
+				{% endfor %}
+            </div>
+		</div>
+	</div>
+</section>
+
+<section class="section-padding">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<div class="row">
+					{% for post in posts %}
+					<div class="col-lg-3 col-md-6">
+						<article class="post-grid mb-5">
+							<h3 class="post-title mt-1"><a href="{% url 'single_post' post.slug %}">{{ post.title }}</a></h3>
+							<a class="post-thumb mb-4 d-block" href="{% url 'single_post' post.slug %}">
+								<img src="{{post.feature_img.url}}" alt="" class="img-fluid w-100">
+							</a>
+							<span
+								class="cat-name text-color text-center font-extra text-sm text-uppercase letter-spacing-1"><a class="cat-name text-center text-color font-extra text-sm text-uppercase letter-spacing-1" href="{% url 'category_url' post.category.slug %}">{{post.category}}</a></span>
+							<p class="body-text mt-1"><a href="{% url 'single_post' post.slug %}">{{ post.content | truncatewords:9 |safe }}</a></p>
+
+							<span class="text-muted letter-spacing text-uppercase font-sm">{{ post.created}}</span>
+
+						</article>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+
+			<div class="m-auto">
+				<div class="pagination mt-5 pt-4">
+					<ul class="list-inline ">
+						{% if posts.has_previous %}
+                        <li class="list-inline-item">
+                            <a class="prev-posts active" href="?page={{posts.previous_page_number}}"><i class="ti-arrow-left"></i></a>
+                        </li>
+                        {% else %}
+                        <li class="list-inline-item disabled">
+                            <a class="next-posts"><i class="ti-arrow-left"></i></a>
+                        </li>
+                        {% endif %}
+						{% for i in posts.paginator.page_range %}
+                        {% if posts.number == i %}
+						<li class="list-inline-item"><a href="?page={{i}}" class="active">{{i}}</a></li>
+						{% else %}
+						<li class="list-inline-item"><a href="?page={{i}}">{{i}}</a></li>
+						{% endif %}
+                        {% endfor %}
+
+						{% if posts.has_next %}
+						<li class="list-inline-item"><a href="?page={{posts.next_page_number}}" class="prev-posts active"><i class="ti-arrow-right"></i></a></li>
+						{% else %}
+						<li class="list-inline-item disabled"><a class="prev-posts"><i class="ti-arrow-right"></i></a></li>
+						{% endif %}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock %}
